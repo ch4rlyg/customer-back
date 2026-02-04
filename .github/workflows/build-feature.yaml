@@ -20,5 +20,5 @@ jobs:
                     
             - name: build with gradle
               run: |
-                mvnw clean install
+                mvn clean install
                 echo "build with maven"
