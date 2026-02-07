@@ -1,13 +1,16 @@
 name: build and test feature branch
 on:
-  push:
-    branches:
-      - 'feature/**'
+  pull_request:
+    branches: [ develop]
+    types: [ opened, reopened ]
 jobs:
     build-feature:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+              with:
+                ref: ${{ github.event.pull_request.head.sha }}
+
             - name: pull and checkout from git repository
               run: |
                 echo "Pulling latest changes from remote repository"
@@ -17,7 +20,15 @@ jobs:
               with:
                 distribution: 'temurin'
                 java-version: '17'
-                    
+            
+            - name: Cache maven dependencies
+              uses: actions/cache@v2
+              with:
+                path: ~/.m2/repository
+                key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+                restore-keys: |
+                    ${{ runner.os }}-maven-
+
             - name: build with gradle
               run: |
                 mvn clean install
