@@ -1,4 +1,4 @@
-name: Publish jar as artifacts
+name: Publish jar as artifact
 on:
     repository_dispatch:
         types: [ publish-artifact-event ]
